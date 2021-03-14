@@ -75,7 +75,7 @@ pipeline {
                                         "type": "mrkdwn",
                                         "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
                                     ]
-                                ]]
+                                ]])
                         
                         entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
                         entityName  = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_name ").trim()
