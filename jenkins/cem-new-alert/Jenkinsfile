@@ -83,11 +83,13 @@ pipeline {
                         newLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].new_exposure_level ").trim()
                         oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
                     
-                        block.add(["type": "divider"])   
+                        blocks.add(["type": "divider"])   
                         theMsg += "*" + (i+1) + ") " + entityName + "*🔺 "+ newLevel + " (was:" + oldLevel + ") "
                         //theMsg += "_Send the message below to learn more_\n"
                         //theMsg += "/cem GetRecommendations "+ env.event_payload_platform_name + " " + env.event_payload_account_id + " " + entityId + "\n"
-                    }    
+                    }
+                    
+                    // Send interactive message to Slack
                     slackSend (
                         color: "warning",
                         blocks: blocks
