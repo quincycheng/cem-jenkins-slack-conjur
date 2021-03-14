@@ -43,14 +43,17 @@ pipeline {
             }
             steps {
                 // TODO
+                echo "TODO: New shadow admin detected"
+
             }
         }
-        stage('New shadow admin detected') {
+        stage('New full admin detected') {
             when {
                 environment name: 'event_type', value: 'newFullAdminDetected' 
             }
             steps {
                 // TODO
+                echo "TODO: New full admin detected"
             }
         }
         stage('Entities Exposure Level Increased') {
