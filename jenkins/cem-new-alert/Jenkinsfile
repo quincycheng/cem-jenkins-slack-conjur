@@ -110,11 +110,22 @@ pipeline {
                             ).trim()
                             
                             // TODO: Get Remediations
+                            rawRemediations = sh (
+                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\"",
+                                returnStdout: true                            
+                            ).trim()
+                            echo "Remediations: " + rawRemediations
                             
                             // TODO: Get Recommendations
+                            rawRecommendations = sh (
+                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/api/metadata?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\"",
+                                returnStdout: true                            
+                            ).trim()
+                            echo "Recommendations: " + rawRecommendations
 
+                            
+                            // Add context to the message
                             blocks.add(["type": "context","elements":elements])
-
                         }
 
                         // Send interactive message to Slack
