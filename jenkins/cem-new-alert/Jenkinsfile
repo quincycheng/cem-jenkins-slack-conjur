@@ -60,24 +60,23 @@ pipeline {
                 environment name: 'event_type', value: 'entitiesExposureLevelIncreased' 
             }
             steps {
-                // Message Header
-                script {
-                    def noOfEntitles = Integer.parseInt(sh (
-                            script: " echo '" + env.event_payload + "' | jq .entities | jq length ",
-                            returnStdout: true
-                        ).trim())
-                    
-                    blocks = [[
-                                "type": "section",
-                                "text": [
-                                    "type": "mrkdwn",
-                                    "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
-                                ]
-                            ]]
-                }
+                // Get secrets from Conjur
                 withCredentials([conjurSecretCredential(credentialsId: 'Jenkins/cemPass', variable: 'CEM_PASS')]) {
-
                     script {
+                        //Message Header
+                        noOfEntitles = Integer.parseInt(sh (
+                                script: " echo '" + env.event_payload + "' | jq .entities | jq length ",
+                                returnStdout: true
+                            ).trim())
+
+                        blocks = [[
+                                    "type": "section",
+                                    "text": [
+                                        "type": "mrkdwn",
+                                        "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
+                                    ]
+                                ]]
+              
                         // Individual Entity
                         for (int i=0; i<noOfEntitles; i++) {
                             entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
@@ -94,13 +93,13 @@ pipeline {
                                 ]])
 
                             elements = [[
-                                    "type": "mrkdwn",
-                                    "text": "*Current Exposure Level: "+ newLevel + "*"
-                                 ],
-                                 [
-                                    "type": "mrkdwn",
-                                    "text": "_Previous Exposure Level:_ " + oldLevel + ""
-                                  ]]
+                                        "type": "mrkdwn",
+                                        "text": "*Current Exposure Level: "+ newLevel + "*"
+                                      ],
+                                      [
+                                        "type": "mrkdwn",
+                                        "text": "_Previous Exposure Level:_ " + oldLevel + ""
+                                      ]]
 
                             // TODO: Add logics for Tags here
                             
