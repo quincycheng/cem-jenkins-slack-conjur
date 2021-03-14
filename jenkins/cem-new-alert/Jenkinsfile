@@ -105,6 +105,9 @@ pipeline {
 
                             // TODO: Add logics for Tags here
                             
+                            // Add context to the message
+                            blocks.add(["type": "context","elements":elements])
+                            
                             // Get CEM Logon Token
                             cemToken = sh (
                                 script: "curl -s -X POST  -H \"Content-Type: application/json\" -d '{ \"organization\":\"cybr-ap-se-jpn\",\"accessKey\":\"${CEM_PASS}\"}'  https://api.cem.cyberark.com/apis/login  | jq -r .token ",
@@ -125,10 +128,71 @@ pipeline {
                                 returnStdout: true                            
                             ).trim()
                             echo "Recommendations: " + rawRecommendations
-
+                            recommendationsList = rawRecommendations.tokenize(',[]')
                             
-                            // Add context to the message
-                            blocks.add(["type": "context","elements":elements])
+                            // Individual Recommendation
+                            for (int j=0; j<recommendationsList.size(); j++) {
+                                
+                                // Check if recommandation is actionable by CEM as remediation
+                                if (remediationsList.contains(recommendationsList[j]) {
+                                    accessory = [
+                                        "type": "button",
+                                        "text": [
+                                            "type": "plain_text",
+                                            "text": ":wrench: Fix Now",
+                                            "emoji": true
+                                        ],
+                                        "value": "FIX^^"+platform+"^^"+accountId+"^^"+ entityId +"^^"+recommendationsList[j],
+                                        "action_id": "button-action",
+                                        "style": "primary"
+                                    ]
+                                } else {
+                                    accessory = [
+                                        "type": "button",
+                                        "text": [
+                                            "type": "plain_text",
+                                            "text": ":eyes: More Details",
+                                            "emoji": true
+                                        ],
+                                        "value": "doNothing",
+                                        "url": "https://cem.cyberark.com/cloud-entities/details?platform="+platform+"&accountId="+accountId+"&entityId="+entityId+"&section=recommendations",
+                                        "action_id": "button-action"
+                                    ]
+                                }
+                                
+                                
+                                switch (recommendationsList[j]) {
+                                    case "REMOVE_USERS_FROM_GROUP": 
+                                        recommendationText = "Remove Users from the Group"
+                                        break
+                                    case "UN_USED_PERMISSIONS_IN_GROUP": 
+                                        recommendationText = "Remove Excessive Permissions from the Group"
+                                        break
+                                    case "UN_USED_PERMISSIONS":
+                                        recommendationText = "Remove permissions that have not been used in over 90 days"
+                                        break
+                                    case "SHADOW_ADMIN_MFA":
+                                        recommendationText = "Secure a shadow admin with MFA"
+                                        break
+                                    case "SHADOW_ADMIN_PAS":
+                                        recommendationText = "Secure a shadow admin in PAS/Privileged Cloud"
+                                        break
+                                    default:
+                                        recommendationText = "Recommendation code is "+recommendationsList[j]
+                                        break
+                                }
+                                
+                                blocks.add([
+                                    "type": "section",
+                                    "text": [
+                                        "type": "mrkdwn",
+                                        "text": (j+1) + recommendationText
+                                    ],
+                                    "accessory": accessory
+                                ])
+                            }
+                            
+
                         }
 
                         // Send interactive message to Slack
