@@ -70,12 +70,21 @@ pipeline {
 
                     for (int i=0; i<noOfEntitles; i++) {
                         theMsg += "\n"
+                        blocks =[
+                                [
+                                    "type": "section",
+                                    "text": [
+                                        "type": "mrkdwn",
+                                        "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
+                                    ]
+                                ]
                         
                         entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
                         entityName  = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_name ").trim()
                         newLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].new_exposure_level ").trim()
                         oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
                     
+                        block.add(["type": "divider"])   
                         theMsg += "*" + (i+1) + ") " + entityName + "*🔺 "+ newLevel + " (was:" + oldLevel + ") "
                         //theMsg += "_Send the message below to learn more_\n"
                         //theMsg += "/cem GetRecommendations "+ env.event_payload_platform_name + " " + env.event_payload_account_id + " " + entityId + "\n"
@@ -83,7 +92,7 @@ pipeline {
                 }
                 slackSend (
                     color: "warning",
-                    message: "${theMsg}"
+                    blocks: blocks
                 )
             }
         }
