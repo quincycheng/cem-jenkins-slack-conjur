@@ -88,11 +88,11 @@ pipeline {
                         //theMsg += "_Send the message below to learn more_\n"
                         //theMsg += "/cem GetRecommendations "+ env.event_payload_platform_name + " " + env.event_payload_account_id + " " + entityId + "\n"
                     }    
+                    slackSend (
+                        color: "warning",
+                        blocks: blocks
+                    )
                 }
-                slackSend (
-                    color: "warning",
-                    blocks: blocks
-                )
             }
         }
     }
