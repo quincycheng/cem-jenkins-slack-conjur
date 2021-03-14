@@ -17,7 +17,6 @@ pipeline {
                     message: "🔥 *" + event_payload_account_name + " on " + event_payload_platform_name + " connection error*\n"
                         + "      🏥 " + event_payload_status + "\n"
                         + "      🩺 " + event_payload_status_reason + "\n"
-                        + "      ⏰ " +  event_payload_scan_date +"\n"
                         + "      💊 Visit <https://cem.cyberark.com/platforms/"+event_payload_platform_name+"|CyberArk CEM> to fix it"
                 )
             }
