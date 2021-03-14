@@ -113,7 +113,7 @@ pipeline {
                             
                             // TODO: Get Remediations
                             rawRemediations = sh (
-                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\"",
+                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -j '.remediations | . []|=keys | . [] '",
                                 returnStdout: true                            
                             ).trim()
                             echo "Remediations: " + rawRemediations
