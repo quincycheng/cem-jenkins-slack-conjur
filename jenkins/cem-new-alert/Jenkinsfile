@@ -21,17 +21,17 @@ pipeline {
                 )
             }
         }
-        stage('Total Exposure increased') {
+        stage('Global Exposure increased') {
             when {
                 environment name: 'event_type', value: 'globalExposureLevelExceeded' 
             }
             steps {
                 slackSend (
                     color: "warning",
-                    message: "🆙 *Total Exposure Increased*\n"
+                    message: "🆙 *Global Exposure Increased*\n"
                         + "      🔺 " +  event_payload_new_exposure_level 
                         + " (was: " +  event_payload_previous_exposure_level +")\n"
-                        + "      💊 Visit <https://cem.cyberark.com/platforms/"+event_payload_platform_name+"|CyberArk CEM> for more details"
+                        + "      💊 Visit <https://cem.cyberark.com/platforms/|CyberArk CEM> for more details"
                 )
             }
             
