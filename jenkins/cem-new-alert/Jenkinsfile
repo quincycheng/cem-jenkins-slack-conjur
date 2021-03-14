@@ -83,7 +83,8 @@ pipeline {
                         newLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].new_exposure_level ").trim()
                         oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
                     
-                        blocks.add(["type": "divider"])   
+                        blocks.add(["type": "divider"])  
+                        blocks.add(["type": "section","text": ["type": "mrkdwn","text": ":cloud: Recommendations for *<https://cem.cyberark.com/cloud-entities/details?platform="+ env.event_payload_platform_name + "&accountId=" + env.event_payload_account_id + "&entityId=" + entityId + "|" + entityId + ">*"]])
                         theMsg += "*" + (i+1) + ") " + entityName + "*🔺 "+ newLevel + " (was:" + oldLevel + ") "
                         //theMsg += "_Send the message below to learn more_\n"
                         //theMsg += "/cem GetRecommendations "+ env.event_payload_platform_name + " " + env.event_payload_account_id + " " + entityId + "\n"
