@@ -134,7 +134,7 @@ pipeline {
                             for (int j=0; j<recommendationsList.size(); j++) {
                                 
                                 // Check if recommandation is actionable by CEM as remediation
-                                if (remediationsList.contains(recommendationsList[j]) {
+                                if (remediationsList.contains(recommendationsList[j])) {
                                     accessory = [
                                         "type": "button",
                                         "text": [
