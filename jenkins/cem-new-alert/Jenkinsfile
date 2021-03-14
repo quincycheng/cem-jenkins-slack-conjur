@@ -60,6 +60,7 @@ pipeline {
                 environment name: 'event_type', value: 'entitiesExposureLevelIncreased' 
             }
             steps {
+                // Message Header
                 script {
                     def noOfEntitles = Integer.parseInt(sh (
                             script: " echo '" + env.event_payload + "' | jq .entities | jq length ",
@@ -73,44 +74,56 @@ pipeline {
                                     "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
                                 ]
                             ]]
+                }
+                withCredentials([conjurSecretCredential(credentialsId: 'Jenkins/cemPass', variable: 'CEM_PASS')]) {
 
-                    // Individual Entity
-                    for (int i=0; i<noOfEntitles; i++) {
+                    script {
+                        // Individual Entity
+                        for (int i=0; i<noOfEntitles; i++) {
+                            entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
+                            entityName  = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_name ").trim()
+                            newLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].new_exposure_level ").trim()
+                            oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
+                            
+                            blocks.add(["type": "divider"])  
+                            blocks.add([
+                                "type": "section",
+                                "text": [
+                                    "type": "mrkdwn",
+                                    "text": ":cloud: Recommendations for *<https://cem.cyberark.com/cloud-entities/details?platform="+ env.event_payload_platform_name + "&accountId=" + env.event_payload_account_id + "&entityId=" + entityId + "|" + entityId + ">*"
+                                ]])
 
-                        
-                        entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
-                        entityName  = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_name ").trim()
-                        newLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].new_exposure_level ").trim()
-                        oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
-                    
-                        blocks.add(["type": "divider"])  
-                        blocks.add([
-                            "type": "section",
-                            "text": [
-                                "type": "mrkdwn",
-                                "text": ":cloud: Recommendations for *<https://cem.cyberark.com/cloud-entities/details?platform="+ env.event_payload_platform_name + "&accountId=" + env.event_payload_account_id + "&entityId=" + entityId + "|" + entityId + ">*"
-                            ]])
+                            elements = [[
+                                    "type": "mrkdwn",
+                                    "text": "*Current Exposure Level: "+ newLevel + "*"
+                                 ],
+                                 [
+                                    "type": "mrkdwn",
+                                    "text": "_Previous Exposure Level:_ " + oldLevel + ""
+                                  ]]
 
-                        elements = [[
-                                "type": "mrkdwn",
-                                "text": "*Current Exposure Level: "+ newLevel + "*"
-                             ],
-                             [
-                                "type": "mrkdwn",
-                                "text": "_Previous Exposure Level:_ " + oldLevel + ""
-                              ]]
-                        
-                        // TODO: Add logics for Tags here
-                        
-                        blocks.add(["type": "context","elements":elements])
-                       
+                            // TODO: Add logics for Tags here
+                            
+                            // Get CEM Logon Token
+                            cemToken = sh (
+                                script: "curl -s -X POST  -H \"Content-Type: application/json\" -d '{ \"organization\":\"cybr-ap-se-jpn\",\"accessKey\":\"${CEM_PASS}\"}'  https://api.cem.cyberark.com/apis/login  | jq -r .token ",
+                                returnStdout: true
+                            ).trim()
+                            
+                            // TODO: Get Remediations
+                            
+                            // TODO: Get Recommendations
+
+                            blocks.add(["type": "context","elements":elements])
+
+                        }
+
+                        // Send interactive message to Slack
+                        slackSend (
+                            color: "warning",
+                            blocks: blocks
+                        )
                     }
-                    
-                    // Send interactive message to Slack
-                    slackSend (
-                        color: "warning",
-                        blocks: blocks
-                    )
                 }
             }
         }
