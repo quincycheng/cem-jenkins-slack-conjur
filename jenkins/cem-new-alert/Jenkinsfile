@@ -113,14 +113,15 @@ pipeline {
                             
                             // TODO: Get Remediations
                             rawRemediations = sh (
-                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -j '.remediations | . []|=keys | . [] '",
+                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.remediations | . []|=keys | . [] '",
                                 returnStdout: true                            
                             ).trim()
                             echo "Remediations: " + rawRemediations
+                            remediationsList = rawRemediations.tokenize(',[]')
                             
                             // TODO: Get Recommendations
                             rawRecommendations = sh (
-                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/api/metadata?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\"",
+                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/api/metadata?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.recommendations | .[] | select(.status==\"NEW\") | .active_recommendations'",
                                 returnStdout: true                            
                             ).trim()
                             echo "Recommendations: " + rawRecommendations
