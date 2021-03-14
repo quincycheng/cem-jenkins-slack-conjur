@@ -132,7 +132,7 @@ pipeline {
                             
                             // Individual Recommendation
                             for (int j=0; j<recommendationsList.size(); j++) {
-                                
+
                                 // Check if recommandation is actionable by CEM as remediation
                                 if (remediationsList.contains(recommendationsList[j])) {
                                     accessory = [
@@ -161,7 +161,7 @@ pipeline {
                                 }
                                 
                                 
-                                switch (recommendationsList[j]) {
+                                switch (recommendationsList[j].replaceAll("\"","") ) {
                                     case "REMOVE_USERS_FROM_GROUP": 
                                         recommendationText = "Remove Users from the Group"
                                         break
@@ -186,7 +186,7 @@ pipeline {
                                     "type": "section",
                                     "text": [
                                         "type": "mrkdwn",
-                                        "text": (j+1) + recommendationText
+                                        "text": (j+1) + ". " + recommendationText
                                     ],
                                     "accessory": accessory
                                 ])
