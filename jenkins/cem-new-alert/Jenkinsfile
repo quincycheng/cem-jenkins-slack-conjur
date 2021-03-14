@@ -72,7 +72,7 @@ pipeline {
                                     "type": "mrkdwn",
                                     "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
                                 ]
-                            ]])
+                            ]]
 
                     // Individual Entity
                     for (int i=0; i<noOfEntitles; i++) {
