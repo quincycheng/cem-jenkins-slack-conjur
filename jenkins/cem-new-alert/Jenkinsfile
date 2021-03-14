@@ -66,16 +66,17 @@ pipeline {
                             returnStdout: true
                         ).trim())
                     
+                    blocks = [[
+                                "type": "section",
+                                "text": [
+                                    "type": "mrkdwn",
+                                    "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
+                                ]
+                            ]])
+
                     // Individual Entity
-                    blocks=[]
                     for (int i=0; i<noOfEntitles; i++) {
-                        blocks.add([
-                                    "type": "section",
-                                    "text": [
-                                        "type": "mrkdwn",
-                                        "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
-                                    ]
-                                ])
+
                         
                         entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
                         entityName  = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_name ").trim()
