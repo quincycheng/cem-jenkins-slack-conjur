@@ -69,13 +69,13 @@ pipeline {
                     // Individual Entity
                     blocks=[]
                     for (int i=0; i<noOfEntitles; i++) {
-                        blocks.add([[
+                        blocks.add([
                                     "type": "section",
                                     "text": [
                                         "type": "mrkdwn",
                                         "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
                                     ]
-                                ]])
+                                ])
                         
                         entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
                         entityName  = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_name ").trim()
@@ -83,19 +83,21 @@ pipeline {
                         oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
                     
                         blocks.add(["type": "divider"])  
-                        blocks.add(["type": "section","text": ["type": "mrkdwn","text": ":cloud: Recommendations for *<https://cem.cyberark.com/cloud-entities/details?platform="+ env.event_payload_platform_name + "&accountId=" + env.event_payload_account_id + "&entityId=" + entityId + "|" + entityId + ">*"]])
+                        blocks.add([
+                            "type": "section",
+                            "text": [
+                                "type": "mrkdwn",
+                                "text": ":cloud: Recommendations for *<https://cem.cyberark.com/cloud-entities/details?platform="+ env.event_payload_platform_name + "&accountId=" + env.event_payload_account_id + "&entityId=" + entityId + "|" + entityId + ">*"
+                            ]])
 
-                        elements = [
-                                        [
-                                            "type": "mrkdwn",
-                                            "text": "*Current Exposure Level: "+ newLevel + "*"
-                                        ],
-                                        [
-                                            "type": "mrkdwn",
-                                            "text": "_Previous Exposure Level:_ " + oldLevel + ""
-                                        ]
-                                    ]
-                        //theMsg += "*" + (i+1) + ") " + entityName + "*🔺 "+ newLevel + " (was:" + oldLevel + ") "
+                        elements = [[
+                                "type": "mrkdwn",
+                                "text": "*Current Exposure Level: "+ newLevel + "*"
+                             ],
+                             [
+                                "type": "mrkdwn",
+                                "text": "_Previous Exposure Level:_ " + oldLevel + ""
+                              ]]
                         
                         // TODO: Add logics for Tags here
                         
