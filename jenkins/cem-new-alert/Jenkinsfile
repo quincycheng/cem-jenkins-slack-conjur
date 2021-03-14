@@ -66,10 +66,8 @@ pipeline {
                             returnStdout: true
                         ).trim())
                     
-                    theMsg = noOfEntitles + " entities' exposure level increased\n"
-
+                    // Individual Entity
                     for (int i=0; i<noOfEntitles; i++) {
-                        theMsg += "\n"
                         blocks =[[
                                     "type": "section",
                                     "text": [
@@ -85,9 +83,23 @@ pipeline {
                     
                         blocks.add(["type": "divider"])  
                         blocks.add(["type": "section","text": ["type": "mrkdwn","text": ":cloud: Recommendations for *<https://cem.cyberark.com/cloud-entities/details?platform="+ env.event_payload_platform_name + "&accountId=" + env.event_payload_account_id + "&entityId=" + entityId + "|" + entityId + ">*"]])
-                        theMsg += "*" + (i+1) + ") " + entityName + "*🔺 "+ newLevel + " (was:" + oldLevel + ") "
-                        //theMsg += "_Send the message below to learn more_\n"
-                        //theMsg += "/cem GetRecommendations "+ env.event_payload_platform_name + " " + env.event_payload_account_id + " " + entityId + "\n"
+
+                        elements = [
+                                        [
+                                            "type": "mrkdwn",
+                                            "text": "*Current Exposure Level: "+ newLevel + "*"
+                                        ],
+                                        [
+                                            "type": "mrkdwn",
+                                            "text": "_Previous Exposure Level:_ " + oldLevel + ""
+                                        ]
+                                    ]
+                        //theMsg += "*" + (i+1) + ") " + entityName + "*🔺 "+ newLevel + " (was:" + oldLevel + ") "
+                        
+                        // TODO: Add logics for Tags here
+                        
+                        blocks.add(["type": "context","elements":elements])
+                       
                     }
                     
                     // Send interactive message to Slack
