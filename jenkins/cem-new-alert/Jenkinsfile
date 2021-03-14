@@ -67,8 +67,9 @@ pipeline {
                         ).trim())
                     
                     // Individual Entity
+                    blocks=[]
                     for (int i=0; i<noOfEntitles; i++) {
-                        blocks =[[
+                        blocks.add([[
                                     "type": "section",
                                     "text": [
                                         "type": "mrkdwn",
