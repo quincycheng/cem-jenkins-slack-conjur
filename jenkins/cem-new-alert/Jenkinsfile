@@ -18,7 +18,7 @@ pipeline {
                         + "      🏥 " + event_payload_status + "\n"
                         + "      🩺 " + event_payload_status_reason + "\n"
                         + "      ⏰ " +  event_payload_scan_date +"\n"
-                        + "      💊 Login to <https://cem.cyberark.com/platforms/"+event_payload_platform_name+"|CyberArk CEM> to fix it"
+                        + "      💊 Visit <https://cem.cyberark.com/platforms/"+event_payload_platform_name+"|CyberArk CEM> to fix it"
                 )
             }
         }
@@ -32,10 +32,26 @@ pipeline {
                     message: "🆙 *Total Exposure Increased*\n"
                         + "      🔺 " +  event_payload_new_exposure_level 
                         + " (was: " +  event_payload_previous_exposure_level +")\n"
-                        + "      ⏰ " +  event_payload_scan_date +"\n"
+                        + "      💊 Visit <https://cem.cyberark.com/platforms/"+event_payload_platform_name+"|CyberArk CEM> for more details"
                 )
             }
             
+        }
+        stage('New shadow admin detected') {
+            when {
+                environment name: 'event_type', value: 'newShadowAdminDetected' 
+            }
+            steps {
+                // TODO
+            }
+        }
+        stage('New shadow admin detected') {
+            when {
+                environment name: 'event_type', value: 'newFullAdminDetected' 
+            }
+            steps {
+                // TODO
+            }
         }
         stage('Entities Exposure Level Increased') {
             when {
@@ -59,8 +75,8 @@ pipeline {
                         oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
                     
                         theMsg += "*" + (i+1) + ") " + entityName + "*🔺 "+ newLevel + " (was:" + oldLevel + ") "
-                        theMsg += "_Send the message below to learn more_\n"
-                        theMsg += "/cem GetRecommendations "+ env.event_payload_platform_name + " " + env.event_payload_account_id + " " + entityId + "\n"
+                        //theMsg += "_Send the message below to learn more_\n"
+                        //theMsg += "/cem GetRecommendations "+ env.event_payload_platform_name + " " + env.event_payload_account_id + " " + entityId + "\n"
                     }    
                 }
                 slackSend (
