@@ -61,7 +61,7 @@ pipeline {
             }
             steps {
                 // Get secrets from Conjur
-                withCredentials([conjurSecretCredential(credentialsId: 'Jenkins/cemPass', variable: 'CEM_PASS')]) {
+                withCredentials([conjurSecretCredential(credentialsId: 'SecOps/cemPass', variable: 'CEM_PASS')]) {
                     script {
                         //Message Header
                         noOfEntitles = Integer.parseInt(sh (
