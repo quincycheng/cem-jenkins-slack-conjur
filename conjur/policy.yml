@@ -1,0 +1,32 @@
+- !policy
+  id: SecOps
+  body:
+  - &variables
+    - !variable cemUser
+    - !variable cemPass
+    - !variable awsAK
+    - !variable awsSK
+    - !variable slackSigningSecret
+    - !variable slackBotToken
+
+  - !group secrets-users
+
+  - !permit
+    role: !group secrets-users
+    privilege: [ read, execute ]
+    resource: *variables
+
+  - !layer
+
+  - !host jenkins.quincycheng.com
+  - !host 600557127681/SlackLambdaApp
+
+  - !grant
+    role: !layer
+    members:
+      - !host jenkins.quincycheng.com
+      - !host 600557127681/SlackLambdaApp
+
+  - !grant
+    member: !layer
+    role: !group secrets-users
