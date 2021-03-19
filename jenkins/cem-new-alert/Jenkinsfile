@@ -183,7 +183,55 @@ pipeline {
                                 ]
                             ])
                         
-                        
+                        blocks.add(
+                           [
+                                "type": "section",
+                                "text": [
+                                    "type": "mrkdwn",
+                                    "text": "What do you want to do with these permissions?"
+                                ],
+                                "accessory": [
+                                    "type": "static_select",
+                                    "placeholder": [
+                                        "type": "plain_text",
+                                        "text": "Select an item",
+                                        "emoji": true
+                                    ],
+                                    "initial_option": [
+                                        "text": [
+                                            "type": "plain_text",
+                                            "text": "Remove all shadow admin permission"
+                                        ],
+                                        "value": "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS"
+                                    ],
+                                    "options": [
+                                        [
+                                            "text": [
+                                                "type": "plain_text",
+                                                "text": "Remove all shadow admin permission"
+                                            ],
+                                            "value": "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS"
+                                        ],
+                                        [
+                                            "text": [
+                                                "type": "plain_text",
+                                                "text": "Keep only shadow admin permission that are in use"
+                                            ],
+                                            "value": "LEAST_PRIVILEGE"
+                                        ],
+                                        [
+                                            "text": [
+                                                "type": "plain_text",
+                                                "text": "Keep all shadow admin permissions"
+                                            ],
+                                            "value": "LEAST_PRIVILEGE_KEEP_ALL_SHADOW_PERMISSIONS"
+                                        ]
+                                    ],
+                                    "action_id": "static_select-action"
+                                ]
+                            ]
+                        )
+                         
                         blocks.add(	[
                             "type": "actions",
                             "elements": [
