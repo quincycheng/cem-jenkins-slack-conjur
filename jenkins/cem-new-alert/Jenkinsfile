@@ -86,6 +86,7 @@ pipeline {
                             platform    = env.event_payload_platform_name
                             accountId   = env.event_payload_account_id
                             
+                            /*
                             blocks.add(["type": "divider"])  
                             blocks.add([
                                 "type": "section",
@@ -102,11 +103,12 @@ pipeline {
                                         "type": "mrkdwn",
                                         "text": "_Previous Exposure Level:_ " + oldLevel + ""
                                       ]]
+                            */
 
                             // TODO: Add logics for Tags here
                             
                             // Add context to the message
-                            blocks.add(["type": "context","elements":elements])
+                            //blocks.add(["type": "context","elements":elements])
                             
                             // Get CEM Logon Token
                             cemToken = sh (
@@ -114,25 +116,29 @@ pipeline {
                                 returnStdout: true
                             ).trim()
                             
-                            // TODO: Get Remediations
+                            //  Get Remediations
                             rawRemediations = sh (
                                 script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.remediations | . []|=keys | . [] '",
                                 returnStdout: true                            
                             ).trim()
-                            echo "Remediations: " + rawRemediations
+                            //echo "Remediations: " + rawRemediations
                             remediationsList = rawRemediations.tokenize(',[]')
                             
-                            // TODO: Get Recommendations
+                            
+                            // Get Recommendations
                             rawRecommendations = sh (
                                 script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/api/metadata?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.recommendations | .[] | select(.status==\"NEW\") | .active_recommendations'",
                                 returnStdout: true                            
                             ).trim()
-                            echo "Recommendations: " + rawRecommendations
+                            //echo "Recommendations: " + rawRecommendations
                             recommendationsList = rawRecommendations.tokenize(',[]')
+                            
+                            optionText = ""
+                            optionsList = []
                             
                             // Individual Recommendation
                             for (int j=0; j<recommendationsList.size(); j++) {
-
+/*
                                 // Check if recommandation is actionable by CEM as remediation
                                 if (remediationsList.contains(recommendationsList[j])) {
                                     accessory = [
@@ -159,17 +165,17 @@ pipeline {
                                         "action_id": "button-action"
                                     ]
                                 }
-                                
+*/
                                 
                                 switch (recommendationsList[j].replaceAll("\"","") ) {
                                     case "REMOVE_USERS_FROM_GROUP": 
                                         recommendationText = "Remove Users from the Group"
                                         break
                                     case "UN_USED_PERMISSIONS_IN_GROUP": 
-                                        recommendationText = "Remove Excessive Permissions from the Group"
+                                        recommendationText = "Remove Excessive Permissions from the Group (with fix)"
                                         break
                                     case "UN_USED_PERMISSIONS":
-                                        recommendationText = "Remove permissions that have not been used in over 90 days"
+                                        recommendationText = "Remove permissions that have not been used in over 90 days (with fix)"
                                         break
                                     case "SHADOW_ADMIN_MFA":
                                         recommendationText = "Secure a shadow admin with MFA"
@@ -182,6 +188,10 @@ pipeline {
                                         break
                                 }
                                 
+                                if (j!=0) { optionText +="\n" }
+                                optionText += (j+1) + ". " + recommendationText
+                                
+                                /*
                                 blocks.add([
                                     "type": "section",
                                     "text": [
@@ -190,10 +200,61 @@ pipeline {
                                     ],
                                     "accessory": accessory
                                 ])
+                                */
                             }
-                            
 
+                            optionsList.add([
+                                    "text": [
+                                    "type": "mrkdwn",
+                                    "text": ":cloud: <https://cem.cyberark.com/cloud-entities/details?platform="+platform+"&accountId="+accountId+"&entityId="+entityId +"|"+entityId+">"
+                                ],
+                                "description": [
+                                    "type": "mrkdwn",
+                                    "text": optionText
+                                ],
+                                "value": platform+"^^"+accountId+"^^"+ entityId +"^^"+recommendationsList[j]
+                            ])
                         }
+
+                        blocks.add(	[
+                            "type": "section",
+                            "text": [
+                                "type": "mrkdwn",
+                                "text": "Recommendations"
+                            ],
+                            "accessory": [
+                                "type": "checkboxes",
+                                "options": optionsList
+                            ],
+                            "action_id": "checkboxes-action"
+                        ])
+                        
+                        blocks.add(	[
+                            "type": "actions",
+                            "elements": [
+                                [
+                                    "type": "button",
+                                    "text": [
+                                        "type": "plain_text",
+                                        "text": "Review",
+                                        "emoji": true
+                                    ],
+                                    "value": "review fixes",
+                                    "action_id": "view-fix"
+                                ],
+                                [
+                                    "type": "button",
+                                    "text": [
+                                        "type": "plain_text",
+                                        "text": "Fix now",
+                                        "emoji": true
+                                    ],
+                                    "style": "primary",
+                                    "value": "Fix now",
+                                    "action_id": "apply-fix"
+                                ]
+                            ]
+                        ])
 
                         // Send interactive message to Slack
                         slackSend (
