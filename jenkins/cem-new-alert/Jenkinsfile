@@ -196,6 +196,9 @@ pipeline {
                                 ]
                             ]
                         ])
+                        
+                        echo "Block: " + blocks
+
 
                         // Send interactive message to Slack
                         slackSend (
