@@ -202,11 +202,11 @@ pipeline {
                         blocks.add(	[ 
                             "type": "context",
                                 "elements": [
-                                    {
+                                    [
                                         "type": "plain_text",
                                         "text": "Recommendations with :wrench: can be remediated by the buttons below",
                                         "emoji": true
-                                    }
+                                    ]
                                 ]
                             ])
                         
