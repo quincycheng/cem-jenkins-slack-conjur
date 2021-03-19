@@ -147,11 +147,11 @@ pipeline {
                             optionsList.add([
                                     "text": [
                                     "type": "mrkdwn",
-                                    "text": ":cloud: <https://cem.cyberark.com/cloud-entities/details?platform="+platform+"&accountId="+accountId+"&entityId="+entityId +"|"+entityId+">"
+                                    "text": ":cloud: "+entityId
                                 ],
                                 "description": [
                                     "type": "mrkdwn",
-                                    "text": optionText.take(151)
+                                    "text": optionText.take(150)
                                 ],
                                 "value": platform+"^^"+accountId+"^^"+ entityId 
                             ])
