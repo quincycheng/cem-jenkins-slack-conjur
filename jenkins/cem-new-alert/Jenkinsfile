@@ -77,6 +77,8 @@ pipeline {
                                     ]
                                 ]]
               
+                        optionsList = []
+                        
                         // Individual Entity
                         for (int i=0; i<noOfEntitles; i++) {
                             entityId    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].entity_id ").trim()
@@ -115,7 +117,7 @@ pipeline {
                             recommendationsList = rawRecommendations.tokenize(',[]')
                             
                             optionText = ""
-                            optionsList = []
+
                             
                             // Individual Recommendation
                             for (int j=0; j<recommendationsList.size(); j++) {
