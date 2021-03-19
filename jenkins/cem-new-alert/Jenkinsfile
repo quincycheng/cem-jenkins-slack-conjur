@@ -133,10 +133,10 @@ pipeline {
                                         recommendationText = "Remove excessive permissions that have not been used in 90+ days :wrench:"
                                         break
                                     case "SHADOW_ADMIN_MFA":
-                                        recommendationText = "Secure a shadow admin with MFA"
+                                        recommendationText = "Secure shadow admin with MFA"
                                         break
                                     case "SHADOW_ADMIN_PAS":
-                                        recommendationText = "Secure a shadow admin in PAS/Privileged Cloud"
+                                        recommendationText = "Secure shadow admin in PAS"
                                         break
                                     default:
                                         recommendationText = recommendationsList[j]
