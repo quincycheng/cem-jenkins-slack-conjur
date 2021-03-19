@@ -157,7 +157,6 @@ pipeline {
                             ])
                         }
 
-                        /*
                         blocks.add(	[
                             "type": "section",
                             "text": [
@@ -166,11 +165,10 @@ pipeline {
                             ],
                             "accessory": [
                                 "type": "checkboxes",
-                                "options": optionsList
+                                "options": optionsList,
+                                "action_id": "checkboxes-action"
                             ],
-                            "action_id": "checkboxes-action"
                         ])
-                        */
                         
                         blocks.add(	[
                             "type": "actions",
