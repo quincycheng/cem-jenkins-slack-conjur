@@ -149,7 +149,7 @@ pipeline {
                             optionsList.add([
                                     "text": [
                                     "type": "mrkdwn",
-                                    "text": ":cloud: "+entityId
+                                    "text": ":cloud: "+entityId + " :small_red_triangle: _" + newLevel + "_"
                                 ],
                                 "description": [
                                     "type": "mrkdwn",
@@ -163,7 +163,7 @@ pipeline {
                             "type": "section",
                             "text": [
                                 "type": "mrkdwn",
-                                "text": "Recommendations"
+                                "text": "_Recommendations_"
                             ],
                             "accessory": [
                                 "type": "checkboxes",
@@ -179,7 +179,7 @@ pipeline {
                                     "type": "button",
                                     "text": [
                                         "type": "plain_text",
-                                        "text": "Review",
+                                        "text": "Review Fixes",
                                         "emoji": true
                                     ],
                                     "value": "review fixes",
@@ -199,8 +199,17 @@ pipeline {
                             ]
                         ])
                         
-                        echo "Block: " + blocks
-
+                        blocks.add(	[ 
+                            "type": "context",
+                                "elements": [
+                                    {
+                                        "type": "plain_text",
+                                        "text": "Recommendations with :wrench: can be remediated by the buttons below",
+                                        "emoji": true
+                                    }
+                                ]
+                            ])
+                        
 
                         // Send interactive message to Slack
                         slackSend (
