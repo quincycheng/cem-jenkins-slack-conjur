@@ -172,6 +172,18 @@ pipeline {
                             ],
                         ])
                         
+                        blocks.add(	[ 
+                            "type": "context",
+                                "elements": [
+                                    [
+                                        "type": "plain_text",
+                                        "text": "Recommendations with :wrench: can be remediated by the buttons below",
+                                        "emoji": true
+                                    ]
+                                ]
+                            ])
+                        
+                        
                         blocks.add(	[
                             "type": "actions",
                             "elements": [
@@ -199,17 +211,7 @@ pipeline {
                             ]
                         ])
                         
-                        blocks.add(	[ 
-                            "type": "context",
-                                "elements": [
-                                    [
-                                        "type": "plain_text",
-                                        "text": "Recommendations with :wrench: can be remediated by the buttons below",
-                                        "emoji": true
-                                    ]
-                                ]
-                            ])
-                        
+
 
                         // Send interactive message to Slack
                         slackSend (
