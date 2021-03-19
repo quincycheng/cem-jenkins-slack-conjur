@@ -85,30 +85,11 @@ pipeline {
                             oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
                             platform    = env.event_payload_platform_name
                             accountId   = env.event_payload_account_id
-                            
-                            /*
-                            blocks.add(["type": "divider"])  
-                            blocks.add([
-                                "type": "section",
-                                "text": [
-                                    "type": "mrkdwn",
-                                    "text": ":cloud: Recommendations for *<https://cem.cyberark.com/cloud-entities/details?platform="+ env.event_payload_platform_name + "&accountId=" + env.event_payload_account_id + "&entityId=" + entityId + "|" + entityId + ">*"
-                                ]])
 
-                            elements = [[
-                                        "type": "mrkdwn",
-                                        "text": "*Current Exposure Level: "+ newLevel + "*"
-                                      ],
-                                      [
-                                        "type": "mrkdwn",
-                                        "text": "_Previous Exposure Level:_ " + oldLevel + ""
-                                      ]]
-                            */
 
                             // TODO: Add logics for Tags here
                             
                             // Add context to the message
-                            //blocks.add(["type": "context","elements":elements])
                             
                             // Get CEM Logon Token
                             cemToken = sh (
@@ -138,35 +119,7 @@ pipeline {
                             
                             // Individual Recommendation
                             for (int j=0; j<recommendationsList.size(); j++) {
-/*
-                                // Check if recommandation is actionable by CEM as remediation
-                                if (remediationsList.contains(recommendationsList[j])) {
-                                    accessory = [
-                                        "type": "button",
-                                        "text": [
-                                            "type": "plain_text",
-                                            "text": ":wrench: Fix Now",
-                                            "emoji": true
-                                        ],
-                                        "value": "FIX^^"+platform+"^^"+accountId+"^^"+ entityId +"^^"+recommendationsList[j],
-                                        "action_id": "button-action",
-                                        "style": "primary"
-                                    ]
-                                } else {
-                                    accessory = [
-                                        "type": "button",
-                                        "text": [
-                                            "type": "plain_text",
-                                            "text": ":eyes: More Details",
-                                            "emoji": true
-                                        ],
-                                        "value": "doNothing",
-                                        "url": "https://cem.cyberark.com/cloud-entities/details?platform="+platform+"&accountId="+accountId+"&entityId="+entityId+"&section=recommendations",
-                                        "action_id": "button-action"
-                                    ]
-                                }
-*/
-                                
+          
                                 switch (recommendationsList[j].replaceAll("\"","") ) {
                                     case "REMOVE_USERS_FROM_GROUP": 
                                         recommendationText = "Remove Users from the Group"
@@ -187,20 +140,8 @@ pipeline {
                                         recommendationText = "Recommendation code is "+recommendationsList[j]
                                         break
                                 }
-                                
                                 if (j!=0) { optionText +="\n" }
                                 optionText += (j+1) + ". " + recommendationText
-                                
-                                /*
-                                blocks.add([
-                                    "type": "section",
-                                    "text": [
-                                        "type": "mrkdwn",
-                                        "text": (j+1) + ". " + recommendationText
-                                    ],
-                                    "accessory": accessory
-                                ])
-                                */
                             }
 
                             optionsList.add([
