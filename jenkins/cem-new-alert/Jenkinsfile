@@ -229,7 +229,7 @@ pipeline {
                                     "type": "button",
                                     "text": [
                                         "type": "plain_text",
-                                        "text": "Review Fixes for 🔧",
+                                        "text": "Preview Fixes",
                                         "emoji": true
                                     ],
                                     "value": "review fixes",
@@ -239,7 +239,7 @@ pipeline {
                                     "type": "button",
                                     "text": [
                                         "type": "plain_text",
-                                        "text": "Apply Fix for 🔧 ",
+                                        "text": "Fix now",
                                         "emoji": true
                                     ],
                                     "style": "primary",
@@ -248,14 +248,12 @@ pipeline {
                                 ]
                             ]
                         ])
-                        
-
 
                         // Send interactive message to Slack
                         slackSend (
                             color: "warning",
                             blocks: blocks,
-                            message: "Entities' exposure level increased"
+                            message: "Exposure level of cloud entities increased"
                         )
                     }
                 }
