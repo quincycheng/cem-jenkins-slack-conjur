@@ -76,7 +76,7 @@ pipeline {
                                         "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
                                     ]
                                 ]]
-                        
+                        blocks.add([ "type": "divider" ] )
                         blocks.add(
                            [
                                 "type": "section",
@@ -221,6 +221,7 @@ pipeline {
                             ],
                         ])
                         
+                        /*
                         blocks.add(	[ 
                             "type": "context",
                                 "elements": [
@@ -231,9 +232,9 @@ pipeline {
                                     ]
                                 ]
                             ])
-                        
-                        
-                         
+                        */
+
+                       
                         blocks.add(	[
                             "type": "actions",
                             "elements": [
