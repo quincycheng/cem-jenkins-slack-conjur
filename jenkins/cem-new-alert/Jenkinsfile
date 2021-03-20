@@ -251,7 +251,7 @@ pipeline {
                                     "type": "button",
                                     "text": [
                                         "type": "plain_text",
-                                        "text": "Fix 🔧 now",
+                                        "text": "Apply Fix for 🔧 ",
                                         "emoji": true
                                     ],
                                     "style": "primary",
