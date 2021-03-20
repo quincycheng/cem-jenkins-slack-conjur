@@ -149,7 +149,7 @@ pipeline {
                             optionsList.add([
                                     "text": [
                                     "type": "mrkdwn",
-                                    "text": ":cloud: "+entityId + " :small_red_triangle: _" + newLevel + "_"
+                                    "text": "☁️ "+entityId + " 🔺 _" + newLevel + "_"
                                 ],
                                 "description": [
                                     "type": "mrkdwn",
