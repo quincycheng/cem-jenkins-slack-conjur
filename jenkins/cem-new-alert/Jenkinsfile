@@ -212,7 +212,7 @@ pipeline {
                             "type": "section",
                             "text": [
                                 "type": "mrkdwn",
-                                "text": "_Recommendation details:_"
+                                "text": "Select the entities with :wrench: for quick fixes:"
                             ],
                             "accessory": [
                                 "type": "checkboxes",
@@ -221,19 +221,6 @@ pipeline {
                             ],
                         ])
                         
-                        /*
-                        blocks.add(	[ 
-                            "type": "context",
-                                "elements": [
-                                    [
-                                        "type": "plain_text",
-                                        "text": "Recommendations with :wrench: can be remediated by the buttons below",
-                                        "emoji": true
-                                    ]
-                                ]
-                            ])
-                        */
-
                        
                         blocks.add(	[
                             "type": "actions",
