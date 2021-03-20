@@ -76,6 +76,55 @@ pipeline {
                                         "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
                                     ]
                                 ]]
+                        
+                        blocks.add(
+                           [
+                                "type": "section",
+                                "text": [
+                                    "type": "mrkdwn",
+                                    "text": "What do you want to do?"
+                                ],
+                                "accessory": [
+                                    "type": "static_select",
+                                    "placeholder": [
+                                        "type": "plain_text",
+                                        "text": "Select an item",
+                                        "emoji": true
+                                    ],
+                                    "initial_option": [
+                                        "text": [
+                                            "type": "plain_text",
+                                            "text": "Remove all shadow admin permission"
+                                        ],
+                                        "value": "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS"
+                                    ],
+                                    "options": [
+                                        [
+                                            "text": [
+                                                "type": "plain_text",
+                                                "text": "Remove all shadow admin permission"
+                                            ],
+                                            "value": "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS"
+                                        ],
+                                        [
+                                            "text": [
+                                                "type": "plain_text",
+                                                "text": "Keep only shadow admin permission that are in use"
+                                            ],
+                                            "value": "LEAST_PRIVILEGE"
+                                        ],
+                                        [
+                                            "text": [
+                                                "type": "plain_text",
+                                                "text": "Keep all shadow admin permissions"
+                                            ],
+                                            "value": "LEAST_PRIVILEGE_KEEP_ALL_SHADOW_PERMISSIONS"
+                                        ]
+                                    ],
+                                    "action_id": "static_select-action"
+                                ]
+                            ]
+                        )
               
                         optionsList = []
                         
@@ -127,10 +176,10 @@ pipeline {
                                         recommendationText = "Remove users from group"
                                         break
                                     case "UN_USED_PERMISSIONS_IN_GROUP": 
-                                        recommendationText = "Remove excessive permissions from group :wrench:"
+                                        recommendationText = "Remove excessive permissions from group 🔧"
                                         break
                                     case "UN_USED_PERMISSIONS":
-                                        recommendationText = "Remove excessive permissions that have not been used in 90+ days :wrench:"
+                                        recommendationText = "Remove excessive permissions that have not been used in 90+ days 🔧"
                                         break
                                     case "SHADOW_ADMIN_MFA":
                                         recommendationText = "Secure shadow admin with MFA"
@@ -163,7 +212,7 @@ pipeline {
                             "type": "section",
                             "text": [
                                 "type": "mrkdwn",
-                                "text": "_Recommendations_"
+                                "text": "_Recommendation details:_"
                             ],
                             "accessory": [
                                 "type": "checkboxes",
@@ -183,54 +232,7 @@ pipeline {
                                 ]
                             ])
                         
-                        blocks.add(
-                           [
-                                "type": "section",
-                                "text": [
-                                    "type": "mrkdwn",
-                                    "text": "What do you want to do with these permissions?"
-                                ],
-                                "accessory": [
-                                    "type": "static_select",
-                                    "placeholder": [
-                                        "type": "plain_text",
-                                        "text": "Select an item",
-                                        "emoji": true
-                                    ],
-                                    "initial_option": [
-                                        "text": [
-                                            "type": "plain_text",
-                                            "text": "Remove all shadow admin permission"
-                                        ],
-                                        "value": "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS"
-                                    ],
-                                    "options": [
-                                        [
-                                            "text": [
-                                                "type": "plain_text",
-                                                "text": "Remove all shadow admin permission"
-                                            ],
-                                            "value": "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS"
-                                        ],
-                                        [
-                                            "text": [
-                                                "type": "plain_text",
-                                                "text": "Keep only shadow admin permission that are in use"
-                                            ],
-                                            "value": "LEAST_PRIVILEGE"
-                                        ],
-                                        [
-                                            "text": [
-                                                "type": "plain_text",
-                                                "text": "Keep all shadow admin permissions"
-                                            ],
-                                            "value": "LEAST_PRIVILEGE_KEEP_ALL_SHADOW_PERMISSIONS"
-                                        ]
-                                    ],
-                                    "action_id": "static_select-action"
-                                ]
-                            ]
-                        )
+                        
                          
                         blocks.add(	[
                             "type": "actions",
@@ -239,7 +241,7 @@ pipeline {
                                     "type": "button",
                                     "text": [
                                         "type": "plain_text",
-                                        "text": "Review Fixes",
+                                        "text": "Review Fixes for 🔧",
                                         "emoji": true
                                     ],
                                     "value": "review fixes",
@@ -249,7 +251,7 @@ pipeline {
                                     "type": "button",
                                     "text": [
                                         "type": "plain_text",
-                                        "text": "Fix now",
+                                        "text": "Fix 🔧 now",
                                         "emoji": true
                                     ],
                                     "style": "primary",
