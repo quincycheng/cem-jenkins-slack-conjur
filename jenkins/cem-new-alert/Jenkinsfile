@@ -268,7 +268,7 @@ pipeline {
                         slackSend (
                             color: "warning",
                             blocks: blocks,
-                            text: "Entities' exposure level increased"
+                            message: "Entities' exposure level increased"
                         )
                     }
                 }
