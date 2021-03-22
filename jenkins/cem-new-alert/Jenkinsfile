@@ -73,7 +73,7 @@ pipeline {
                                     "type": "section",
                                     "text": [
                                         "type": "mrkdwn",
-                                        "text": ":chart_with_upwards_trend: CEM detected "+noOfEntitles+" entities' *exposure level increased*"
+                                        "text": ":chart_with_upwards_trend: *Exposure level increased* on "+noOfEntitles+" entities"
                                     ]
                                 ]]
                         blocks.add([ "type": "divider" ] )
@@ -82,7 +82,7 @@ pipeline {
                                 "type": "section",
                                 "text": [
                                     "type": "mrkdwn",
-                                    "text": "What do you want to do?"
+                                    "text": "*What do you want to do?*"
                                 ],
                                 "accessory": [
                                     "type": "static_select",
@@ -136,11 +136,6 @@ pipeline {
                             oldLevel    = sh (returnStdout: true, script: "echo '" + env.event_payload + "'  | jq -r .entities["+i+"].previous_exposure_level ").trim()
                             platform    = env.event_payload_platform_name
                             accountId   = env.event_payload_account_id
-
-
-                            // TODO: Add logics for Tags here
-                            
-                            // Add context to the message
                             
                             // Get CEM Logon Token
                             cemToken = sh (
@@ -212,7 +207,7 @@ pipeline {
                             "type": "section",
                             "text": [
                                 "type": "mrkdwn",
-                                "text": "Select the entities with :wrench: for quick fixes:"
+                                "text": "*Which entities with :wrench: you want to fix?*"
                             ],
                             "accessory": [
                                 "type": "checkboxes",
