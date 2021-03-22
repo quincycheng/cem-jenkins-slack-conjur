@@ -15,13 +15,35 @@ pipeline {
 
          steps { 
               script {
+                 withCredentials([
+                       conjurSecretCredential(credentialsId: 'CEM_PASS', variable: 'CEM_PASS'),
+                      conjurSecretCredential(credentialsId: 'AWS_AK', variable: 'AWS_ACCESS_KEY_ID'),
+                      conjurSecretCredential(credentialsId: 'AWS_SK', variable: 'AWS_SECRET_ACCESS_KEY'),
+                 ]) {
+                     
+                     /*
 
-                 blocks = [
+                            // Get CEM Logon Token
+                            cemToken = sh (
+                                script: "curl -s -X POST  -H \"Content-Type: application/json\" -d '{ \"organization\":\"cybr-ap-se-jpn\",\"accessKey\":\"${CEM_PASS}\"}'  https://api.cem.cyberark.com/apis/login  | jq -r .token ",
+                                returnStdout: true
+                            ).trim()
+                            
+                            //  Get Remediations
+                            rawRemediations = sh (
+                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.remediations | . []|=keys | . [] '",
+                                returnStdout: true                            
+                            ).trim()
+                            //echo "Remediations: " + rawRemediations
+                            remediationsList = rawRemediations.tokenize(',[]')
+                        */
+                     
+                      blocks = [
                             [
                                 "type": "section",
                                 "text": [
                                     "type": "mrkdwn",
-                                    "text": "Fix for ${params.'least_privilege_option'} have been applied to the following entities:\n ${params.'entities'}"
+                                    "text": "AI-powered remediations for ${params.'least_privilege_option'} have been applied to the following entities:\n ${params.'entities'}"
                                 ]
                             ],
                             [
@@ -29,7 +51,7 @@ pipeline {
                                 "elements": [
                                     [
                                         "type": "mrkdwn",
-                                        "text": "*<@${params.'user_id'}>* has approved this action"
+                                        "text": "*<@${params.'user_id'}>* has instructed this action"
                                     ]
                                 ]
                             ]
