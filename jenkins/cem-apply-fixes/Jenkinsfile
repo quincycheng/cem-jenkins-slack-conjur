@@ -47,7 +47,7 @@ pipeline {
                                 "type": "section",
                                 "text": [
                                     "type": "mrkdwn",
-                                    "text": "AI-powered remediations for ${params.'least_privilege_option'} have been applied to the following entities:\n ${params.'entities'}"
+                                    "text": ":white_check_mark: AI-powered remediations for ${params.'least_privilege_option'} have been applied to the following entities:\n ${params.'entities'}"
                                 ]
                             ],
                             [
@@ -65,7 +65,7 @@ pipeline {
                         color: "warning",
                         blocks: blocks,
                         message: "Remediations applied",
-                        channel: "#${params.'channel_name'}"
+                        channel: "#"+"${params.'channel_name'}"
                     )
                  }
               }
