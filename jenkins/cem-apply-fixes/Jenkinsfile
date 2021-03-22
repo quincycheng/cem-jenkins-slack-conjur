@@ -1,0 +1,97 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Get Recommendations') {
+            
+            steps {
+                
+                echo " least_privilege_option: ${params.'least_privilege_option'}"
+                echo " entities: ${params.'entities'}"
+                echo " channel name: ${params.'channel_name'}"
+                echo " user id: ${params.'user_id'}"
+            }
+        }
+       stage('Apply Fixes') {
+
+         steps {
+             // Send interactive message to Slack
+                slackSend (
+                    color: "warning",
+                    blocks: blocks,
+                    message: "Exposure level of cloud entities increased"
+                )
+
+                /*
+                slackSend (
+                    color: "good",
+                    channel: params.channel_name,
+                    message: "Got it @"+params.user_name+"!\nGathering recommendations for `" + entityId + "` of `"+ accountId+"` on `"+platform +"`"
+                )
+                withCredentials([conjurSecretCredential(credentialsId: '	Jenkins/cemPass', variable: 'CEM_PASS')]) {
+                    script {
+                        cemToken = sh (
+                            script: "curl -s -X POST  -H \"Content-Type: application/json\" -d '{ \"organization\":\"cybr-ap-se-jpn\",\"accessKey\":\"${CEM_PASS}\"}'  https://api.cem.cyberark.com/apis/login  | jq -r .token ",
+                            returnStdout: true
+                        ).trim()
+                        
+                        rawRecommendations = sh (
+                            script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/api/metadata?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\"",
+                            returnStdout: true                            
+                        ).trim()
+                        
+                        sh ("echo RAW: ${rawRecommendations}")
+                        
+                        recommendations = sh (
+                            script: "echo '${rawRecommendations}' | jq '.recommendations' | jq '.[] | select(.status==\"NEW\")' | jq -jr .active_recommendations",
+                            returnStdout: true                            
+                        ).trim()
+                        
+                        
+                        def noOfRecommendations = Integer.parseInt(sh (
+                            script: " echo '${recommendations}' | jq length ",
+                            returnStdout: true
+                        ).trim())
+                        
+                        theMsg = "Here comes "+ noOfRecommendations +" recommendation(s) for `" + entityId +"`\n"
+                        for (int i=0; i<noOfRecommendations; i++) {
+                            recommendationCode = sh (
+                                    script: " echo '${recommendations}'|jq -jr .["+i+"]",
+                                    returnStdout: true
+                                ).trim() 
+                                
+                            theMsg += "  " + (i+1) + ") "
+                            switch (recommendationCode) {
+                                case "REMOVE_USERS_FROM_GROUP": 
+                                    theMsg+="Remove Users from the Group"
+                                    break
+                                case "UN_USED_PERMISSIONS_IN_GROUP": 
+                                    theMsg+="Remove Excessive Permissions from the Group"
+                                    break
+                                case "UN_USED_PERMISSIONS":
+                                    theMsg+="Remove permissions that have not been used in over 90 days"
+                                    break
+                                case "SHADOW_ADMIN_MFA":
+                                    theMsg+="Secure a shadow admin with MFA"
+                                    break
+                                case "SHADOW_ADMIN_PAS":
+                                    theMsg+="Secure a shadow admin in PAS/Privileged Cloud"
+                                    break
+                                default:
+                                    theMsg+="`${recommendationCode}`"
+                                    break
+                            }
+                            theMsg+="\n"
+                        }
+                    }
+                }
+                slackSend (
+                    color: "good",
+                    channel: params.channel_name,
+                    message: "${theMsg}"
+                )
+                
+            }*/
+        }
+    }
+}
