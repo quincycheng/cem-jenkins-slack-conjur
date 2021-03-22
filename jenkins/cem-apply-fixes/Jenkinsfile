@@ -90,8 +90,8 @@ pipeline {
                     channel: params.channel_name,
                     message: "${theMsg}"
                 )
-                
-            }*/
+             */   
+            }
         }
     }
 }
