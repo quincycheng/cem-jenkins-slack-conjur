@@ -64,6 +64,7 @@ pipeline {
                     slackSend (
                         color: "warning",
                         blocks: blocks,
+                        message: "Remediations applied",
                         channel: "#${params.'channel_name'}"
                     )
                  }
