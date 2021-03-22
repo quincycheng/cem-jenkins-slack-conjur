@@ -13,31 +13,34 @@ pipeline {
         }
        stage('Apply Fixes') {
 
-         steps {             
-             blocks = [
-                        [
-                            "type": "section",
-                            "text": [
-                                "type": "mrkdwn",
-                                "text": "Fix for ${params.'least_privilege_option'} have been applied to the following entities:\n ${params.'entities'}"
-                            ]
-                        ],
-                        [
-                            "type": "context",
-                            "elements": [
-                                [
+         steps { 
+              script {
+
+                 blocks = [
+                            [
+                                "type": "section",
+                                "text": [
                                     "type": "mrkdwn",
-                                    "text": "*<@${params.'user_id'}>* has approved this action"
+                                    "text": "Fix for ${params.'least_privilege_option'} have been applied to the following entities:\n ${params.'entities'}"
+                                ]
+                            ],
+                            [
+                                "type": "context",
+                                "elements": [
+                                    [
+                                        "type": "mrkdwn",
+                                        "text": "*<@${params.'user_id'}>* has approved this action"
+                                    ]
                                 ]
                             ]
                         ]
-                    ]
-             
-                slackSend (
-                    color: "warning",
-                    blocks: blocks,
-                    channel: "#${params.'channel_name'}"
-                )
+
+                    slackSend (
+                        color: "warning",
+                        blocks: blocks,
+                        channel: "#${params.'channel_name'}"
+                    )
+              }
            }
         }
     }
