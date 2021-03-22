@@ -18,7 +18,7 @@ pipeline {
                  withCredentials([
                        conjurSecretCredential(credentialsId: 'CEM_PASS', variable: 'CEM_PASS'),
                       conjurSecretCredential(credentialsId: 'AWS_AK', variable: 'AWS_ACCESS_KEY_ID'),
-                      conjurSecretCredential(credentialsId: 'AWS_SK', variable: 'AWS_SECRET_ACCESS_KEY'),
+                      conjurSecretCredential(credentialsId: 'AWS_SK', variable: 'AWS_SECRET_ACCESS_KEY')
                  ]) {
                     sh (
                         script: "aws iam get-user",
@@ -66,6 +66,7 @@ pipeline {
                         blocks: blocks,
                         channel: "#${params.'channel_name'}"
                     )
+                 }
               }
            }
         }
