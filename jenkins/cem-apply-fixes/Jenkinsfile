@@ -43,7 +43,7 @@ pipeline {
                      entityList = "${params.'entities'}".tokenize('","')
                      
                      for (int i=0; i<entityList.size(); i++) {
-                        entityString = entityList[i].replaceAll("\"","").replaceAll("\\/",'/')
+                        entityString = entityList[i].replaceAll("\"","").replaceAll("\\","")
                          theMsg += entityString + "\n"
                      
                      
