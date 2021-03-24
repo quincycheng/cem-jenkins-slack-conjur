@@ -100,8 +100,8 @@ pipeline {
                          }
                         
                     
-                        theMsg += "Remediations: " + rawRemediations
-                        remediationsList = rawRemediations.tokenize(',[]')
+                        //theMsg += "Remediations: " + rawRemediations
+                        //remediationsList = rawRemediations.tokenize(',[]')
                      
                      }                    
                      
