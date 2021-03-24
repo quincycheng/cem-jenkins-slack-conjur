@@ -71,7 +71,7 @@ pipeline {
                                 "type": "section",
                                 "text": [
                                     "type": "mrkdwn",
-                                    "text": 
+                                    "text": theMsg
                                 ]
                             ],
                             [
