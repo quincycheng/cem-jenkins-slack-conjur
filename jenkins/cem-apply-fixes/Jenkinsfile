@@ -68,7 +68,7 @@ pipeline {
                         ).trim()  
                          
                         isRemediationExist = sh (
-                            script: "echo  '" + rawRemediation + "' | jq -c '.remediations .remediations | .[].UN_USED_PERMISSIONS."+inputOption+" | length'",
+                            script: "echo  '" + rawRemediation + "' | jq -c '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+" | length'",
                             returnStdout: true                            
                         ).trim()
                         
