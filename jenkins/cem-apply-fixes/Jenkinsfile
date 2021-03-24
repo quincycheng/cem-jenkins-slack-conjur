@@ -16,14 +16,38 @@ pipeline {
          steps { 
               script {
                  withCredentials([
-                       conjurSecretCredential(credentialsId: 'CEM_PASS', variable: 'CEM_PASS'),
-                      conjurSecretCredential(credentialsId: 'AWS_AK', variable: 'AWS_ACCESS_KEY_ID'),
-                      conjurSecretCredential(credentialsId: 'AWS_SK', variable: 'AWS_SECRET_ACCESS_KEY')
+                    conjurSecretCredential(credentialsId: 'CEM_PASS', variable: 'CEM_PASS'),
+                    conjurSecretCredential(credentialsId: 'AWS_AK', variable: 'AWS_ACCESS_KEY_ID'),
+                    conjurSecretCredential(credentialsId: 'AWS_SK', variable: 'AWS_SECRET_ACCESS_KEY')
                  ]) {
                     sh (
                         script: "aws iam get-user",
                         returnStdout: true                            
                     ).trim()
+                     
+                     theMsg = ":white_check_mark: AI-powered remediations for ";
+                     switch (params.least_privilege_option) {
+                        case "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS":
+                            theMsg +="removing all shadow admin permission"
+                            break;
+                        case "LEAST_PRIVILEGE":
+                            theMsg +="keeping only shadow admin permission that are in use"
+                            break;
+                        case "LEAST_PRIVILEGE_KEEP_ALL_SHADOW_PERMISSIONS":
+                            theMsg +="_*keeping all shadow admin permissions*_"
+                            break;                     
+                     }
+                     
+                     theMsg += " have been applied to the following entities:\n"
+                     
+                     entityList = "${params.'entities'}".tokenize('","')
+                     
+                     for (int i=0; i<entityList.size(); i++) {
+                        entityString = entityList[i].replaceAll("\"","").replaceAll("\\/","/")
+                         theMsg += entityString + "\n"
+                     
+                     
+                     }                    
                      
                      /*
 
@@ -47,7 +71,7 @@ pipeline {
                                 "type": "section",
                                 "text": [
                                     "type": "mrkdwn",
-                                    "text": ":white_check_mark: AI-powered remediations for ${params.'least_privilege_option'} have been applied to the following entities:\n ${params.'entities'}"
+                                    "text": 
                                 ]
                             ],
                             [
