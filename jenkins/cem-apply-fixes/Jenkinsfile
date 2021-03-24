@@ -35,10 +35,10 @@ pipeline {
                      theMsg = ":white_check_mark: AI-powered remediations for ";
                      switch (params.least_privilege_option) {
                         case "LEAST_PRIVILEGE_REMOVE_SHADOW_PERMISSIONS":
-                            theMsg +="removing all shadow admin permission"
+                            theMsg +="_*removing all shadow admin permission*_"
                             break;
                         case "LEAST_PRIVILEGE":
-                            theMsg +="keeping only shadow admin permission that are in use"
+                            theMsg +="_*keeping only shadow admin permission that are in use*_"
                             break;
                         case "LEAST_PRIVILEGE_KEEP_ALL_SHADOW_PERMISSIONS":
                             theMsg +="_*keeping all shadow admin permissions*_"
@@ -55,13 +55,18 @@ pipeline {
                         theEntity = entityString.tokenize('^^')
                         platform = theEntity[0] 
                         accountId = theEntity[1] 
-                        entityId = theEntity[2].replaceAll("\\/", "/")
-
-                             
-                             
+                        entityId = theEntity[2].replaceAll("\\\\/", "/");
                              
                         theMsg += "- " + entityId + "\n"
 
+                         //  Get Remediations
+                        rawRemediations = sh (
+                            script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.remediations | . []|=keys | . [] '",
+                            returnStdout: true                            
+                        ).trim()
+                         
+                        theMsg += "Remediations: " + rawRemediations
+                        remediationsList = rawRemediations.tokenize(',[]')
                      
                      }                    
                      
@@ -69,13 +74,7 @@ pipeline {
 
 
                             
-                            //  Get Remediations
-                            rawRemediations = sh (
-                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.remediations | . []|=keys | . [] '",
-                                returnStdout: true                            
-                            ).trim()
-                            //echo "Remediations: " + rawRemediations
-                            remediationsList = rawRemediations.tokenize(',[]')
+
                         */
                      
                       blocks = [
