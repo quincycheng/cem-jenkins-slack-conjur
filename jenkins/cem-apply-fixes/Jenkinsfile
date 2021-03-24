@@ -58,13 +58,48 @@ pipeline {
                         entityId = theEntity[2].replaceAll("\\\\/", "/");
                              
                         theMsg += "- " + entityId + "\n"
+                         
+                        inputOption = params.least_privilege_option
 
                          //  Get Remediations
-                        rawRemediations = sh (
-                            script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\" | jq -c '.remediations | . []|=keys | . [] '",
+                        rawRemediation = sh (
+                            script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\"",
+                            returnStdout: true                            
+                        ).trim()  
+                         
+                        isRemediationExist = sh (
+                            script: "echo  '" + rawRemediation + "' | jq -c '.remediations .remediations | .[].UN_USED_PERMISSIONS."+inputOption+" | length'",
                             returnStdout: true                            
                         ).trim()
+                        
+                        if (isRemediationExist == "0") {
+                             inputOption = "LEAST_PRIVILEGE"
+                             rawRemediation = sh (
+                                script: "curl -s -X GET 'https://api.cem.cyberark.com/recommendations/remediations?platform="+platform+"&account_id="+accountId+"&entity_id="+entityId+"' --header 'Content-Type: application/json' --header \"Authorization: Bearer ${cemToken}\"",
+                                returnStdout: true                            
+                             ).trim()  
+                         }
                          
+                        command = sh (
+                            script: "echo  '" + rawRemediation + "' | jq -r '.remediations .remediations | .[].UN_USED_PERMISSIONS."+inputOption+".data.commands' | base64 -D",
+                            returnStdout: true                            
+                        ).trim()                      
+                        
+                        rawPolicy = sh (
+                            script: "echo  '" + rawRemediation + "' | jq -r '.remediations .remediations | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies'",
+                            returnStdout: true                            
+                        ).trim()                      
+                        
+                         if (rawPolicy != null ) {
+                            policyFileList  = sh (
+                                script: "echo  '" + rawPolicy + "' | jq -r '. | keys'",
+                                returnStdout: true                            
+                            ).trim()              
+                         
+                           sh ("echo "+ policyFileList)
+                         }
+                        
+                    
                         theMsg += "Remediations: " + rawRemediations
                         remediationsList = rawRemediations.tokenize(',[]')
                      
