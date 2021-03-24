@@ -20,6 +20,13 @@ pipeline {
                     conjurSecretCredential(credentialsId: 'AWS_AK', variable: 'AWS_ACCESS_KEY_ID'),
                     conjurSecretCredential(credentialsId: 'AWS_SK', variable: 'AWS_SECRET_ACCESS_KEY')
                  ]) {
+                     
+                    // Get CEM Logon Token
+                    cemToken = sh (
+                        script: "curl -s -X POST  -H \"Content-Type: application/json\" -d '{ \"organization\":\"cybr-ap-se-jpn\",\"accessKey\":\"${CEM_PASS}\"}'  https://api.cem.cyberark.com/apis/login  | jq -r .token ",
+                        returnStdout: true
+                    ).trim()
+
                     sh (
                         script: "aws iam get-user",
                         returnStdout: true                            
@@ -44,18 +51,23 @@ pipeline {
                      
                      for (int i=0; i<entityList.size(); i++) {
                         entityString = entityList[i].replaceAll("\"","")
-                         theMsg += entityString + "\n"
                      
+                        theEntity = entityString.tokenize('^^')
+                        platform = theEntity[0] 
+                        accountId = theEntity[1] 
+                        entityId = theEntity[2].replaceAll("\\/", "/")
+
+                             
+                             
+                             
+                        theMsg += "- " + entityId + "\n"
+
                      
                      }                    
                      
                      /*
 
-                            // Get CEM Logon Token
-                            cemToken = sh (
-                                script: "curl -s -X POST  -H \"Content-Type: application/json\" -d '{ \"organization\":\"cybr-ap-se-jpn\",\"accessKey\":\"${CEM_PASS}\"}'  https://api.cem.cyberark.com/apis/login  | jq -r .token ",
-                                returnStdout: true
-                            ).trim()
+
                             
                             //  Get Remediations
                             rawRemediations = sh (
