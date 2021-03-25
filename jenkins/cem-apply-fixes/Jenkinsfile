@@ -57,7 +57,7 @@ pipeline {
                         accountId = theEntity[1] 
                         entityId = theEntity[2].replaceAll("\\\\/", "/");
                              
-                        theMsg += "• " + entityId + "\n"
+                        theMsg += ":cloud: " + entityId + "\n"
                          
                         inputOption = params.least_privilege_option
 
