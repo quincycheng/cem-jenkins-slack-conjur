@@ -104,7 +104,7 @@ pipeline {
                                returnStdout: true                            
                              ).trim()              
                                policyFileContent  = sh (
-                                 script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+j+"] as $k | .[$k] ' | base64 -d ",
+                                 script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+j+"] as \$k | .[\$k] ' | base64 -d ",
                                  returnStdout: true                            
                                ).trim()          
                                 
