@@ -130,6 +130,8 @@ pipeline {
                                 ]
                             ]
                         ]
+                     
+                     echo "theMsg: " + theMsg
 
                     slackSend (
                         color: "warning",
