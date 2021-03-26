@@ -96,46 +96,43 @@ pipeline {
                         
                          if (noOfPolicies > 0 ) {
                              
-                             for (int i=0; i<noOfPolicies; i++) {
-                                policyFileName  = sh (
-                                    script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+i+"]'",
-                                    returnStdout: true                            
-                                ).trim()              
-                                policyFileContent  = sh (
-                                    script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+i+"] as $k | .[$k] ' | base64 -d ",
-                                    returnStdout: true                            
-                                ).trim()          
+                           for (int j=0; i<noOfPolicies; i++) {
+                             policyFileName  = sh (
+                               script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+j+"]'",
+                               returnStdout: true                            
+                             ).trim()              
+                               policyFileContent  = sh (
+                                 script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+j+"] as $k | .[$k] ' | base64 -d ",
+                                 returnStdout: true                            
+                               ).trim()          
                                 
-                                 
-                                fullCommand = "cat <<'EOF' >>"+ policyFileName +"\n" + policyFileContent + "\nEOF" + fullCommand
-                                 
-                                fullCommand += "rm -f "+ policyFileName
-                                 
-                           }
-                         
-                     }                    
+                              fullCommand = "cat <<'EOF' >>"+ policyFileName +"\n" + policyFileContent + "\nEOF" + fullCommand
+                              fullCommand += "rm -f "+ policyFileName
+                         }
+                       }
+                    }                    
                     
                      
-                      blocks = [
-                            [
-                                "type": "section",
-                                "text": [
-                                    "type": "mrkdwn",
-                                    "text": theMsg
-                                ]
-                            ],
-                            [
-                                "type": "context",
-                                "elements": [
-                                    [
-                                        "type": "mrkdwn",
-                                        "text": "*<@${params.'user_id'}>* has instructed this action"
-                                    ]
-                                ]
-                            ]
+                    blocks = [
+                      [
+                        "type": "section",
+                        "text": [
+                          "type": "mrkdwn",
+                          "text": theMsg
                         ]
-                     
-                     echo "theMsg: " + theMsg
+                      ],
+                      [
+                        "type": "context",
+                        "elements": [
+                          [
+                            "type": "mrkdwn",
+                            "text": "*<@${params.'user_id'}>* has instructed this action"
+                          ]
+                        ]
+                      ]
+                    ]
+
+                    echo "theMsg: " + theMsg
 
                     slackSend (
                         color: "warning",
