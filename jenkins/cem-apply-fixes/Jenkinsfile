@@ -1,3 +1,5 @@
+def fullCommand
+
 pipeline {
     agent any
 
@@ -85,32 +87,34 @@ pipeline {
                             returnStdout: true                            
                         ).trim()                      
                         
-                        isPolicyExist = sh (
+                        fullCommand += command
+                         
+                        noOfPolicies  = Integer.parseInt(sh (
                             script: "echo  '" + rawRemediation + "' | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | length'",
                             returnStdout: true                            
                         ).trim()                      
                         
-                         if (isPolicyExist != "0" ) {
-                            policyFileList  = sh (
-                                script: "echo  '" + rawPolicy + "' | jq -r '. | keys'",
-                                returnStdout: true                            
-                            ).trim()              
-                         
-                           sh ("echo "+ policyFileList)
+                         if (noOfPolicies > 0 ) {
+                             
+                             for (int i=0; i<noOfPolicies; i++) {
+                                policyFileName  = sh (
+                                    script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+i+"]'",
+                                    returnStdout: true                            
+                                ).trim()              
+                                policyFileContent  = sh (
+                                    script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+i+"] as $k | .[$k] ' | base64 -d ",
+                                    returnStdout: true                            
+                                ).trim()          
+                                
+                                 
+                                fullCommand = "cat <<'EOF' >>"+ policyFileName +"\n" + policyFileContent + "\nEOF" + fullCommand
+                                 
+                                fullCommand += "rm -f "+ policyFileName
+                                 
+                             }
                          }
-                        
-                    
-                        //theMsg += "Remediations: " + rawRemediations
-                        //remediationsList = rawRemediations.tokenize(',[]')
-                     
                      }                    
-                     
-                     /*
-
-
-                            
-
-                        */
+                    
                      
                       blocks = [
                             [
@@ -143,5 +147,12 @@ pipeline {
               }
            }
         }
+                                                         
+       stage('Summary') {
+           script {
+               echo "The following command have been executed:\n" + fullCommand
+               
+           }
+       }
     }
 }
