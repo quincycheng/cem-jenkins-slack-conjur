@@ -100,11 +100,11 @@ pipeline {
                              
                            for (int j=0; i<noOfPolicies; i++) {
                              policyFileName  = sh (
-                               script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+j+"]'",
+                               script: "echo  '" + rawRemediation + "' |  | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | keys["+j+"]'",
                                returnStdout: true                            
                              ).trim()              
                                policyFileContent  = sh (
-                                 script: "echo  '" + rawRemediation + "' | jq -r '. | keys["+j+"] as \$k | .[\$k] ' | base64 -d ",
+                                 script: "echo  '" + rawRemediation + "'  | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | keys["+j+"] as \$k | .[\$k] ' | base64 -d ",
                                  returnStdout: true                            
                                ).trim()          
                                 
