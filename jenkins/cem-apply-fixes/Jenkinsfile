@@ -146,7 +146,7 @@ pipeline {
         }
                                                          
        stage('Summary') {
-           script {
+            steps {
                echo "The following command have been executed:\n" + fullCommand
                
            }
