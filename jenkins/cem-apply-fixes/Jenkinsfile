@@ -87,7 +87,7 @@ pipeline {
                             returnStdout: true                            
                         ).trim()                      
                         
-                        fullCommand += command
+                        fullCommand += command + "\n"
                          
                         noOfPolicies  = Integer.parseInt(sh (
                             script: "echo  '" + rawRemediation + "' | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | length'",
@@ -106,8 +106,11 @@ pipeline {
                                  returnStdout: true                            
                                ).trim()          
                                 
-                              fullCommand = "cat <<'EOF' >>"+ policyFileName +"\n" + policyFileContent + "\nEOF" + fullCommand
-                              fullCommand += "rm -f "+ policyFileName
+                               echo "policy file: " + policyFileName
+                               echo "policy content: " + policyFileContent
+                               
+                              fullCommand = "cat <<'EOF' >>"+ policyFileName +"\n" + policyFileContent + "\nEOF\n" + fullCommand
+                              fullCommand += "rm -f "+ policyFileName + "\n"
                          }
                        }
                     }                    
