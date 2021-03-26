@@ -111,8 +111,8 @@ pipeline {
                                  
                                 fullCommand += "rm -f "+ policyFileName
                                  
-                             }
-                         }
+                           }
+                         
                      }                    
                     
                      
