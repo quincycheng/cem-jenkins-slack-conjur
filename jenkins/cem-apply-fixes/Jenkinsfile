@@ -92,7 +92,7 @@ pipeline {
                         noOfPolicies  = Integer.parseInt(sh (
                             script: "echo  '" + rawRemediation + "' | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | length'",
                             returnStdout: true                            
-                        ).trim()                      
+                        ).trim() )                    
                         
                          if (noOfPolicies > 0 ) {
                              
