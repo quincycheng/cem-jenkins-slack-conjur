@@ -23,6 +23,8 @@ pipeline {
                     conjurSecretCredential(credentialsId: 'AWS_SK', variable: 'AWS_SECRET_ACCESS_KEY')
                  ]) {
                      
+                     fullCommand = ""
+                     
                     // Get CEM Logon Token
                     cemToken = sh (
                         script: "curl -s -X POST  -H \"Content-Type: application/json\" -d '{ \"organization\":\"cybr-ap-se-jpn\",\"accessKey\":\"${CEM_PASS}\"}'  https://api.cem.cyberark.com/apis/login  | jq -r .token ",
