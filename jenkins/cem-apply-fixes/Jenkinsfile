@@ -95,14 +95,17 @@ pipeline {
                             script: "echo  '" + rawRemediation + "' | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | length'",
                             returnStdout: true                            
                         ).trim() )                    
-                        
+
+                         echo "No of Policies: " + noOfPolicies
+                         
                          if (noOfPolicies > 0 ) {
                              
-                           for (int j=0; i<noOfPolicies; i++) {
+                           for (int j=0; j<noOfPolicies; j++) {
                              policyFileName  = sh (
                                script: "echo  '" + rawRemediation + "' |  | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | keys["+j+"]'",
                                returnStdout: true                            
-                             ).trim()              
+                             ).trim()    
+                               
                                policyFileContent  = sh (
                                  script: "echo  '" + rawRemediation + "'  | jq -r '.remediations  | .[].UN_USED_PERMISSIONS."+inputOption+".data.policies | keys["+j+"] as \$k | .[\$k] ' | base64 -d ",
                                  returnStdout: true                            
