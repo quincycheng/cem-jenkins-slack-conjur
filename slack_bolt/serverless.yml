@@ -1,0 +1,50 @@
+service: cem-bolt-app # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: java11
+  memorySize: 3008
+  stage: ${opt:stage, 'dev'}
+  # https://www.serverless.com/framework/docs/deprecations/#AWS_API_GATEWAY_NAME_STARTING_WITH_SERVICE
+  apiGateway:
+    shouldStartNameWithService: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - lambda:InvokeFunction
+            - lambda:InvokeAsync
+          Resource: "*"
+  lambdaHashingVersion: "20201221"
+  environment:
+    SERVERLESS_STAGE: ${opt:stage, 'dev'}
+    SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
+    SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+    CACHE_VIEW: ${env:CACHE_VIEW} 
+    CONJUR_ACCOUNT: ${env:CONJUR_ACCOUNT}  
+    CONJUR_APPLIANCE_URL: ${env:CONJUR_APPLIANCE_URL} 
+    CONJUR_AUTHN_LOGIN: ${env:CONJUR_AUTHN_LOGIN}
+    CONJUR_AUTHN_SERVICE_ID: ${env:CONJUR_AUTHN_SERVICE_ID}
+    CEM_PASS: ${env:CEM_PASS}
+    CEM_ORG: ${env:CEM_ORG}
+    JENKINS_URL: ${env:JENKINS_URL}
+    JENKINS_USER: ${env:JENKINS_USER}
+    JENKINS_PASS: ${env:JENKINS_PASS}
+
+package:
+  artifact: build/libs/cem-bolt-app.jar
+
+functions:
+  warmup:
+    handler: hello.WarmupHandler
+    timeout: 120 # optional, in seconds, default is 6
+    events:
+      - schedule: rate(3 minutes)
+  api:
+    handler: hello.SlackEventHandler
+    timeout: 20 # optional, in seconds, default is 6
+    events:
+      - http:
+          path: slack/events
+          method: post

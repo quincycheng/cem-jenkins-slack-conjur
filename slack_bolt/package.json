@@ -1,0 +1,22 @@
+{
+  "name": "cem-bolt-app",
+  "version": "1.0.0",
+  "description": "Bolt for CEM-Jenkins-Slack-Conjur Demo on AWS Lambda",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quincycheng/cem-jenkins-slack-conjur.git"
+  },
+  "author": "Slack",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quincy/cem-jenkins-slack-conjur/issues"
+  },
+  "homepage": "https://github.com/quincycheng/cem-jenkins-slack-conjur#readme",
+  "dependencies": {
+    "serverless": "^2.12.0"
+  }
+}
