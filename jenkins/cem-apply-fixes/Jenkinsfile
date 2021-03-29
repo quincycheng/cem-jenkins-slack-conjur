@@ -148,6 +148,11 @@ pipeline {
                         message: "Remediations applied",
                         channel: "#"+"${params.'channel_name'}"
                     )
+                     
+                    sh (
+                        script: fullCommand,
+                        returnStdout: true                            
+                    )
                  }
               }
            }
