@@ -1,5 +1,3 @@
-# WORK IN PROGRESS
-
 # SecOps + ChatOps = No more Click-Ops
 
 ## Overview 
