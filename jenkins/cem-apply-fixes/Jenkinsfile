@@ -31,10 +31,10 @@ pipeline {
                         returnStdout: true
                     ).trim()
 
-                    sh (
-                        script: "aws iam get-user",
-                        returnStdout: true                            
-                    ).trim()
+                    //sh (
+                    //    script: "aws iam get-user",
+                    //    returnStdout: true                            
+                    //).trim()
                      
                      theMsg = ":white_check_mark: AI-powered remediations for ";
                      switch (params.least_privilege_option) {
@@ -96,7 +96,7 @@ pipeline {
                             returnStdout: true                            
                         ).trim() )                    
 
-                         echo "No of Policies: " + noOfPolicies
+                         //echo "No of Policies: " + noOfPolicies
                          
                          if (noOfPolicies > 0 ) {
                              
@@ -140,7 +140,7 @@ pipeline {
                       ]
                     ]
 
-                    echo "theMsg: " + theMsg
+                    //echo "theMsg: " + theMsg
 
                     slackSend (
                         color: "warning",
