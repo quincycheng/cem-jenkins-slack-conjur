@@ -19,13 +19,13 @@
  - new alert pipeline: [jenkins/cem-new-alert/](./jenkins/cem-new-alert/) folder
  - apply remediations pipeline: [jenkins/cem-apply-fixes/](./jenkins/cem-apply-fixes/) folder
 
-#### To register webhook in Jenkins
+#### To register CEM webhook in Jenkins
 
 1. Install [Generic Webhook Trigger Plugin](https://plugins.jenkins.io/generic-webhook-trigger/) in Jenkins
 2. In the Jenkins pipeline, check `Generic Webhook Trigger` with the following values
    - Value: `cem_token`
    - Expression: `$.text` as `JSONPath`
-   - Token: <your preferred token name>
+   - Token: < your preferred token name >
 
 3. Add the following as the Pipeline script:
 ```
@@ -43,11 +43,11 @@ pipeline {
 ```
 4. Add a webhook at CEM at https://cem.cyberark.com/integrations/webhooks/add
  - webhook name: <your preferred webhook name in CEM>
- - webhook url: https://<Jenkins URL>/generic-webhook-trigger/invoke?token=<your preferred token name>
+ - webhook url: https://<Jenkins URL>/generic-webhook-trigger/invoke?token=< your preferred token name >
 5. Click `Send token to URL` in CEM
-6. Back to Jenkins, the pipeline should be triggered.   Check the logs and look for a line:
+6. Back to Jenkins, the pipeline should be triggered.   Check the logs and look for the line:
 ```
-cem_token = <a long token string from CEM>
+CEM Token: <a long token string from CEM>
 ```
 7. Copy and paste the token string under the field `CEM token` in CEM webconsole 
 8. Click `Validate token` and a success message `Token validated` should be shown
