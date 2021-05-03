@@ -15,6 +15,11 @@
 
 ### Jenkins
 
+### Plugins/Shared Library
+ - CEM Shared Library for Jenkins (https://github.com/quincycheng/cem-jenkins-lib)
+ - Conjur Jenkins Plugin (https://docs.conjur.org/Latest/en/Content/Integrations/jenkins.htm)
+ - Generic Webhook Trigger Plugin (https://plugins.jenkins.io/generic-webhook-trigger/)
+
 #### Pipelines
  - new alert pipeline: [jenkins/cem-new-alert/](./jenkins/cem-new-alert/) folder
  - apply remediations pipeline: [jenkins/cem-apply-fixes/](./jenkins/cem-apply-fixes/) folder
