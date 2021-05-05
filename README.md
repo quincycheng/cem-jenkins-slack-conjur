@@ -89,4 +89,6 @@ cd ..
 ### Conjur
 Policies: [conjur](./conjur) folder
 
+## Maintainer
+[@quincycheng](https://github.com/quincycheng)
 
